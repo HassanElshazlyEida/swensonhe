@@ -1,25 +1,26 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Navbar from './components/Navbar';
+import CategoryList from './components/CategoryList';
+import EventBuilder from './components/EventBuilder';
+import EstimatePrice from './components/EstimatePrice';
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App container mx-auto ">
+      <Navbar />
+      <div className="main-content grid grid-cols-1 md:grid-cols-5 gap-4">
+        <div className="col-span-1 md:col-span-1 shadow-md rounded">
+          <EventBuilder />
+        </div>
+        <div className="col-span-1 md:col-span-3 shadow-md rounded mt-4 md:mt-0">
+          <CategoryList />
+        </div>
+        <div className="col-span-1 md:col-span-1 shadow-md rounded mt-4 md:mt-0">
+          <EstimatePrice />
+        </div>
+      </div>
     </div>
+
   );
 }
 
