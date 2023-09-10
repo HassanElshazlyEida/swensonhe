@@ -6,7 +6,7 @@ import EstimatePrice from './components/EstimatePrice';
 
 function App() {
   return (
-    <div className="App container mx-auto ">
+    <div className="App  mx-auto ">
       <Navbar />
       <div className="main-content grid grid-cols-1 md:grid-cols-5 gap-4">
         <div className="col-span-1 md:col-span-1 shadow-md rounded">
