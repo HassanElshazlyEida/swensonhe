@@ -2,6 +2,8 @@ import axios, { AxiosResponse } from 'axios';
 import React, { useEffect , useState} from "react";
 import {useDispatch,useSelector } from 'react-redux';
 import { fetchCategories , Categories ,fetchCategoryItems} from '../redux/actions/ItemActions';
+import Variants from "../Motions/Variants";
+import Loading from "../Motions/Loading";
 
 const CategoryList  = () => {
     
@@ -31,44 +33,42 @@ const CategoryList  = () => {
       getCategories();
      
     },[]);
-    let categories = useSelector((state: any) => state.categories.categories);
-   
     useEffect(() => {
-        categories.forEach((category:Categories) => {
-            getCategoryItems(category.id);
-        });
-        
-     
-      }, [selectedCategoryId]);
-  
+      categories.forEach((category:Categories) => {
+          getCategoryItems(category.id);
+      });
+    }, [selectedCategoryId]);
+   
+    let categories = useSelector((state: any) => state.categories.categories);
     let items = useSelector((state: any) => state.items);
+    
     useEffect(() => {
       if(items[selectedCategoryId])
          setLoad(true);
     },[items]);
+   
+
   return (
    
     <div className=" mx-auto p-4">
-      { !load ? (
-        <div>...Loading</div>
-      ) : (   
+      { load ? (
         <div>
-        <div className="text-xs sm:text-sm md:text-base  xl:text-xl grid grid-cols-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {categories.map((category:Categories) => (
-                  <div
-                  key={category.id}
-                  className={"text-blue-500 text-center btn-categories font-serif	 hover:text-blue-700 cursor-pointer"}
-                  style={{ borderRadius: '20px', padding: '8px' }}
-                  >
-                  {category.title}
-                  </div>
-            ))}
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 mt-4">
-            {items[selectedCategoryId].map((item:any) => (
+          <div className="text-xs sm:text-sm md:text-base  xl:text-xl grid grid-cols-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {categories.map((category:Categories) => (
+                    <div
+                    key={category.id}
+                    onClick={()=>SetSelectedCategoryId(category.id)}
+                    className={"text-blue-500 text-center btn-categories font-serif	 hover:text-blue-700 cursor-pointer"+  (category.id === selectedCategoryId ? " active-btn" : "")}
+                    style={{ borderRadius: '20px', padding: '8px' }}
+                    >
+                    {category.title}
+                    </div>
+              ))}
+          </div>
+          <Variants  items={items[selectedCategoryId].map((item:any) => (
                 <div key={item.id} className="bg-white rounded-lg shadow-md relative">
                   <img
-                    src={item.imageSrc}
+                    src={item.image}
                     alt={item.title}
                     className="w-full h-32 object-cover rounded-t-lg"
                   />
@@ -86,12 +86,14 @@ const CategoryList  = () => {
                   </button>
                   <div className="p-4">
                     <h3 className="text-lg font-semibold mt-2">{item.title}</h3>
-                    <p className="text-gray-500">{item.price}</p>
+                    <p className="text-gray-500 font-mono">${item.avgBudget}</p>
                   </div>
                 </div>
-              ))}
-          </div>
+              ))}  index={selectedCategoryId} />
         </div>
+
+      ) : (   
+        <Loading />
       )}
     </div>
   );

@@ -2,16 +2,16 @@ import { actionTypes } from "../constants/action-types";
 
 export type Categories = {
     id: number; 
-    title: String;
-    image: String;
+    title: string;
+    image: string;
 };
 export type Item = {
     id: number; 
-    title: String;
+    title: string;
     minBudget: number;
     MaxBudget: number;
     avgBudget: number;
-    image: String;
+    image: string;
 };
 export type CategoryItems = {
     categoryId: number; 
