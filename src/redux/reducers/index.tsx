@@ -17,7 +17,7 @@ type CategoryItemsAction = {
 }
 type ItemsAction = {
   type: string;
-  payload: Array<Item>;
+  item: Item;
 }
 const categoriesReducer = (state = initialState, action: CategoriesAction ) => {
     switch (action.type) {
@@ -43,15 +43,30 @@ const categoriesReducer = (state = initialState, action: CategoriesAction ) => {
     }
   };
   
-  const selectedItemsReducer = (state = [] , action: any) => {
-    
+  const selectedItemsReducer = (state = [] , action: ItemsAction) => {
+    switch (action.type) {
+      case actionTypes.ADD_TO_SELECTED_ITEMS:
+        const newItem = action.item;
+        if (state.hasOwnProperty(action.item.id)) {
+          const newState = { ...state };
+          delete newState[action.item.id];
+          return newState;
+        }else {
+          return {
+            ...state,
+            [action.item.id]: newItem
+          }
+        }
+      default:
+        return state;
+    }
   };
   
  
   const rootReducer = combineReducers({
     categories: categoriesReducer,
     items: itemsReducer,
-  
+    selectedItems: selectedItemsReducer,
   });
 
 export default rootReducer;

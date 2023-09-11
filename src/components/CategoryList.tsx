@@ -1,13 +1,14 @@
 import axios, { AxiosResponse } from 'axios';
 import React, { useEffect , useState} from "react";
 import {useDispatch,useSelector } from 'react-redux';
-import { fetchCategories , Categories ,fetchCategoryItems} from '../redux/actions/ItemActions';
+import { fetchCategories , Categories ,fetchCategoryItems , addToSelectedItems , Item} from '../redux/actions/ItemActions';
 import Variants from "../Motions/Variants";
 import Loading from "../Motions/Loading";
 
 const CategoryList  = () => {
     
     const [selectedCategoryId,SetSelectedCategoryId] = useState(0);
+    const [itemAdded,SetItemAdded] = useState([]);
     const [load,setLoad] = useState(false);
     const dispatch = useDispatch();
     const getCategories = async () => {
@@ -28,7 +29,16 @@ const CategoryList  = () => {
             items: responseCategoryItems.data,
         }));
     }
+    const ToggleItem = (item:Item) => {
+      if(itemAdded[item.id]){
+        dispatch(addToSelectedItems(item));
+      }else {
 
+      }
+     
+
+    }
+  
     useEffect(()=>{
       getCategories();
      
@@ -41,7 +51,8 @@ const CategoryList  = () => {
    
     let categories = useSelector((state: any) => state.categories.categories);
     let items = useSelector((state: any) => state.items);
-    
+    let selectedItems = useSelector((state: any) => state.selectedItems);
+
     useEffect(() => {
       if(items[selectedCategoryId])
          setLoad(true);
@@ -58,7 +69,7 @@ const CategoryList  = () => {
                     <div
                     key={category.id}
                     onClick={()=>SetSelectedCategoryId(category.id)}
-                    className={"text-blue-500 text-center btn-categories font-serif	 hover:text-blue-700 cursor-pointer"+  (category.id === selectedCategoryId ? " active-btn" : "")}
+                    className={"text-blue-500 text-center btn-categories font-serif	  cursor-pointer"+  (category.id === selectedCategoryId ? " active-btn" : "")}
                     style={{ borderRadius: '20px', padding: '8px' }}
                     >
                     {category.title}
@@ -78,11 +89,11 @@ const CategoryList  = () => {
                       width:'25px',
                       height:'25px'
                     }}
-                    onClick={() => {
-                      // Handle button click
+                    onClick={()=>{
+                      dispatch(addToSelectedItems(item));
                     }}
                   >
-                    +
+                   {selectedItems.hasOwnProperty(item.id) ? '✓' : '+'}
                   </button>
                   <div className="p-4">
                     <h3 className="text-lg font-semibold mt-2">{item.title}</h3>
