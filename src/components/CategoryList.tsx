@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import React, { useEffect , useState} from "react";
 import {useDispatch,useSelector } from 'react-redux';
-import { fetchCategories , Categories ,fetchCategoryItems ,calculateAverageCost, addToSelectedItems , Item} from '../redux/actions/ItemActions';
+import { fetchCategories , Categories ,fetchCategoryItems , addToSelectedItems , Item} from '../redux/actions/ItemActions';
 import Variants from "../Motions/Variants";
 import Loading from "../Motions/Loading";
 
@@ -84,6 +84,7 @@ const CategoryList  = () => {
                         categoryId: selectedCategoryId,
                         item: item,
                      }));
+                    //  dispatch(calculateAverageCost(item.avgBudget));
                     }}
                   >
                    {selectedItems[selectedCategoryId]?.hasOwnProperty(item.id) ? '✓' : '+'}

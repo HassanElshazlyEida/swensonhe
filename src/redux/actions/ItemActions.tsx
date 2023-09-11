@@ -46,9 +46,4 @@ export const addToSelectedItems = (item:ItemAction) => {
       payload: item
     };
 };
-export const calculateAverageCost = (price:number) => {
-    return {
-      type: actionTypes.CALCULATE_AVERAGE_COST,
-      payload: price
-    };
-};
+

@@ -1,11 +1,10 @@
 
 import { actionTypes } from "../constants/action-types";
 import { combineReducers } from "redux";
-import { Categories , CategoryItems, Item , CategoryItem  } from '../actions/ItemActions';
+import { Categories , CategoryItems, Item , CategoryItem } from '../actions/ItemActions';
 const initialState = {
     categories: [],
     selectedItems: [],
-    averageCost: 0,
 };
 type CategoriesAction = {
   type: string;
@@ -23,10 +22,11 @@ interface SelectedItemsState {
   [categoryId: number]: {
     [itemId: number]: Item;
   };
+  calculateAverageCost: number;
 }
 type ItemPrice = {
   type: string;
-  payload: number;
+  payload: Item;
 }
 
 
@@ -54,55 +54,53 @@ const categoriesReducer = (state = initialState, action: CategoriesAction ) => {
     }
   };
   
-  const selectedItemsReducer = (state : SelectedItemsState = {}, action: ItemAction) => {
+  const SelectedItemsReducer = (state : SelectedItemsState = {calculateAverageCost: 0}, action: ItemAction) => {
     switch (action.type) {
       case actionTypes.ADD_TO_SELECTED_ITEMS:
         const { categoryId, item } = action.payload;
   
         if (!state[categoryId]) {
-          // dispatch(calculateAverageCost());
           return {
             ...state,
             [categoryId]: {
               [item.id]: item,
             },
+            calculateAverageCost :  state.calculateAverageCost + item.avgBudget
           };
         } else {
           const categoryItems = { ...state[categoryId] };
   
           if (categoryItems[item.id]) {
             delete categoryItems[item.id];
+            return {
+              ...state,
+              [categoryId]: categoryItems,
+              calculateAverageCost :  state.calculateAverageCost  - item.avgBudget
+            };
           } else {
             categoryItems[item.id] = item;
+            return {
+              ...state,
+              [categoryId]: categoryItems,
+              calculateAverageCost :  state.calculateAverageCost + item.avgBudget
+            };
           }
   
-          return {
-            ...state,
-            [categoryId]: categoryItems,
-          };
+         
         }
       default:
         return state;
     }
   };
 
-  const calculateAverageCost = (state = initialState, action: ItemPrice) => {
-    switch (action.type) {
-      case actionTypes.CALCULATE_AVERAGE_COST:
-        return state.averageCost + action.payload;
-      default:
-        return state;
-    } 
-  };
-  
+
  
 
     
   const rootReducer = combineReducers({
     categories: categoriesReducer,
     items: itemsReducer,
-    selectedItems: selectedItemsReducer,
-    calculateAverageCost:calculateAverageCost,
+    selectedItems: SelectedItemsReducer,
   });
 
 export default rootReducer;

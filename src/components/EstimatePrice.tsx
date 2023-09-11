@@ -28,8 +28,7 @@ const EstimatePrice = () => {
               <strong>Basic</strong>
             </p>
             <h3 className="mb-6 text-3xl">
-              <strong>$ </strong>
-              <small className="text-base text-neutral-500 dark:text-neutral-300">/year</small>
+              <strong>$ {selectedItems.calculateAverageCost}</strong>
             </h3>
             </div>
 
