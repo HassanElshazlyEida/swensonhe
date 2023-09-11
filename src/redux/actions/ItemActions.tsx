@@ -17,6 +17,15 @@ export type CategoryItems = {
     categoryId: number; 
     items: Array<Item>;
 }
+export type CategoryItem = {
+    categoryId: number; 
+    item :Item ;
+}
+
+export type ItemAction = {
+    categoryId: number; 
+    item :Item ;
+}
 
 export const fetchCategories = (items: Array<Categories>) => {
     return {
@@ -31,9 +40,15 @@ export const fetchCategoryItems = (item : CategoryItems)=> {
     }
 }
 
-export const addToSelectedItems = (item:Item) => {
+export const addToSelectedItems = (item:ItemAction) => {
     return {
       type: actionTypes.ADD_TO_SELECTED_ITEMS,
-      item
+      payload: item
+    };
+};
+export const calculateAverageCost = (price:number) => {
+    return {
+      type: actionTypes.CALCULATE_AVERAGE_COST,
+      payload: price
     };
 };

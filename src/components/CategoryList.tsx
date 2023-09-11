@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import React, { useEffect , useState} from "react";
 import {useDispatch,useSelector } from 'react-redux';
-import { fetchCategories , Categories ,fetchCategoryItems , addToSelectedItems , Item} from '../redux/actions/ItemActions';
+import { fetchCategories , Categories ,fetchCategoryItems ,calculateAverageCost, addToSelectedItems , Item} from '../redux/actions/ItemActions';
 import Variants from "../Motions/Variants";
 import Loading from "../Motions/Loading";
 
@@ -29,16 +29,7 @@ const CategoryList  = () => {
             items: responseCategoryItems.data,
         }));
     }
-    const ToggleItem = (item:Item) => {
-      if(itemAdded[item.id]){
-        dispatch(addToSelectedItems(item));
-      }else {
-
-      }
-     
-
-    }
-  
+   
     useEffect(()=>{
       getCategories();
      
@@ -64,20 +55,19 @@ const CategoryList  = () => {
     <div className=" mx-auto p-4">
       { load ? (
         <div>
-          <div className="text-xs sm:text-sm md:text-base  xl:text-xl grid grid-cols-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="text-xs sm:text-sm md:text-base  xl:text-xl grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {categories.map((category:Categories) => (
                     <div
                     key={category.id}
                     onClick={()=>SetSelectedCategoryId(category.id)}
-                    className={"text-blue-500 text-center btn-categories font-serif	  cursor-pointer"+  (category.id === selectedCategoryId ? " active-btn" : "")}
-                    style={{ borderRadius: '20px', padding: '8px' }}
+                    className={"text-blue-500 text-center text-base btn-categories font-serif 	rounded-2xl p-2 cursor-pointer"+  (category.id === selectedCategoryId ? " active-btn" : "")}
                     >
-                    {category.title}
+                    {category.title} ({ items[selectedCategoryId].length - Object.keys(selectedItems[category.id] ?? []).length })
                     </div>
               ))}
           </div>
-          <Variants  items={items[selectedCategoryId].map((item:any) => (
-                <div key={item.id} className="bg-white rounded-lg shadow-md relative">
+          <Variants  items={items[selectedCategoryId].map((item:Item) => (
+                <div key={item.id} className="bg-white rounded-lg shadow-md relative ">
                   <img
                     src={item.image}
                     alt={item.title}
@@ -90,10 +80,13 @@ const CategoryList  = () => {
                       height:'25px'
                     }}
                     onClick={()=>{
-                      dispatch(addToSelectedItems(item));
+                      dispatch(addToSelectedItems({
+                        categoryId: selectedCategoryId,
+                        item: item,
+                     }));
                     }}
                   >
-                   {selectedItems.hasOwnProperty(item.id) ? '✓' : '+'}
+                   {selectedItems[selectedCategoryId]?.hasOwnProperty(item.id) ? '✓' : '+'}
                   </button>
                   <div className="p-4">
                     <h3 className="text-lg font-semibold mt-2">{item.title}</h3>
